@@ -88,3 +88,8 @@ def isolate_voltage_columns(df: DataFrame) -> list[str]:
     col_names: list[str] = list(df.columns)
     cell_voltage_list = [name for name in col_names if "Aux_Voltage_" in name]
     return cell_voltage_list
+
+
+def get_number_voltage_columns(df: DataFrame) -> int:
+    voltage_col_name_len = len(isolate_voltage_columns(df))
+    return voltage_col_name_len
