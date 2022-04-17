@@ -74,3 +74,17 @@ def calculate_testtime(df: DataFrame) -> Series[float]:
         Series[float]: Series that represents the test time in seconds.
     """
     return df["Test_Time(s)"] - df["Test_Time(s)"][0]  # type: ignore
+
+
+def isolate_voltage_columns(df: DataFrame) -> list[str]:
+    """Returns a list of the names of the columns containing cell voltages.
+
+    Args:
+        df (DataFrame): DataFrame with "Aux_Voltage" columns
+
+    Returns:
+        list[str]: List of "Aux_Voltage"-Columns
+    """
+    col_names: list[str] = list(df.columns)
+    cell_voltage_list = [name for name in col_names if "Aux_Voltage_" in name]
+    return cell_voltage_list
