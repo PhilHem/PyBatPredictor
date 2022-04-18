@@ -171,11 +171,10 @@ def get_SOC_reference(df: DataFrame) -> DataFrame:
         the stack at the end of the capacity test.
     """
 
-    newdf = DataFrame()
-    df["Test_Time(s)"] = calculate_testtime(df)  # type: ignore
-    smallest_cell = get_smallest_voltage_cell(df)
-    newdf[f"{smallest_cell}(REF)"] = df[smallest_cell]
-    newdf["SOC_Ref"] = np.linspace(100, 0, len(df), endpoint=True).round(3)  # type: ignore
-    newdf["Test_Time(s)"] = df["Test_Time(s)"]
+    newdf = DataFrame()  # Generate new dataframe as the basis for new lookup table
+    newdf["Test_Time(s)"] = calculate_testtime(df)  # type: ignore -- generate time index for new dataframe
+    smallest_cell = get_smallest_voltage_cell(df)  # isolate the cell that first reaches cutoff voltage
+    newdf[f"{smallest_cell}(REF)"] = df[smallest_cell]  # generating column that is named with respective cell name and voltage
+    newdf["SOC_Ref"] = np.linspace(100, 0, len(df), endpoint=True).round(3)  # type: ignore -- generate SOC column
     newdf = newdf.set_index("Test_Time(s)")  # type: ignore
     return newdf
