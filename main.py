@@ -195,3 +195,26 @@ def soc_from_lut(refdf: DataFrame, voltage: float) -> float:
     return refdf.iloc[np.argmin(abs(refdf[refdf.columns[0]]-voltage))][1]  # type: ignore
 
 
+def get_final_SOC(df: DataFrame) -> DataFrame:
+    """Returns a DataFrame that represents the SOC of each cell of a cell stack
+    at the end of a capacity test.
+
+    Args:
+        df (DataFrame): dataframe containing a capacity test.
+
+    Returns:
+        DataFrame: dataframe representing the SOC at the end of capacity test.
+    """
+    refdf = get_SOC_reference(df)
+    soc_df = DataFrame()
+    soc_list = []
+    voltage_cols = get_voltage_column_list(df)
+    for col in voltage_cols:
+        soc = soc_from_lut(refdf, df[col][-1])  # type: ignore
+        soc_list.append(soc)  # type: ignore
+    soc_df["SOC"] = soc_list
+    for idx, cell in enumerate(voltage_cols):
+        voltage_cols[idx] = cell.replace("Aux_Voltage_", "Cell ").replace("(V)", "")
+    soc_df["Cell ID"] = voltage_cols
+    soc_df = soc_df.set_index("Cell ID")
+    return soc_df
