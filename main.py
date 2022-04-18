@@ -99,7 +99,7 @@ def get_number_voltage_columns(df: DataFrame) -> int:
     Returns:
         int: number of "Aux_Voltage" columns.
     """
-    voltage_col_name_len = len(isolate_voltage_columns(df))
+    voltage_col_name_len = len(get_voltage_column_list(df))
     return voltage_col_name_len
 
 
