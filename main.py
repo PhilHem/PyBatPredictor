@@ -101,3 +101,17 @@ def get_number_voltage_columns(df: DataFrame) -> int:
     """
     voltage_col_name_len = len(isolate_voltage_columns(df))
     return voltage_col_name_len
+
+def plot_cell_voltages(df: DataFrame) -> None:
+    """Plots all the cell voltages from a given DataFrame
+    containing battery time series data.
+
+    Args:
+        df (DataFrame): battery time series data
+    """
+    voltage_column_list = get_voltage_column_list(df)
+    ax = df.plot(y=voltage_column_list[0], legend=True)  # type: ignore
+    voltage_column_list = voltage_column_list[1::]
+    for col in voltage_column_list:
+        df.plot(y=col, ax=ax, legend=True, grid=True,  # type:ignore
+                title="Cell Voltages", figsize=(10, 10))  # type:ignore
