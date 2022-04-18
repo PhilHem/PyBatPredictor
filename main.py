@@ -1,5 +1,6 @@
 from pandas import DataFrame, Series
 from typing import List
+import numpy as np
 
 
 def isolate_timeinterval(
@@ -152,3 +153,29 @@ def get_smallest_voltage_cell(df: DataFrame) -> str:
         if df[cell][-1] < df[smallest_voltage_cell][-1]:
             smallest_voltage_cell = cell
     return smallest_voltage_cell
+
+
+def get_SOC_reference(df: DataFrame) -> DataFrame:
+    """Returns a dataframe that isolates the voltage of the first cell
+    that reaches the cutoff voltage within a capacity test and maps a
+    corresponding SOC-Value to each voltage measurement. 
+    This can later be used a lookup table other cells to determine the 
+    last SOC value before ending the test.
+
+    Args:
+        df (DataFrame): Dataframe that represents a capacity 
+        test with multiple cells.
+
+    Returns:
+        DataFrame: Dataframe that shows the SOC of each cell in 
+        the stack at the end of the capacity test.
+    """
+
+    newdf = DataFrame()
+    df["Test_Time(s)"] = calculate_testtime(df)  # type: ignore
+    smallest_cell = get_smallest_voltage_cell(df)
+    newdf[f"{smallest_cell}(REF)"] = df[smallest_cell]
+    newdf["SOC_Ref"] = np.linspace(100, 0, len(df), endpoint=True).round(3)  # type: ignore
+    newdf["Test_Time(s)"] = df["Test_Time(s)"]
+    newdf = newdf.set_index("Test_Time(s)")  # type: ignore
+    return newdf
