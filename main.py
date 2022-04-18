@@ -60,7 +60,7 @@ def isolate_step_index_in_timeinterval(
     return df_temp
 
 
-def calculate_testtime(df: DataFrame) -> Series[float]:
+def calculate_testtime(df: DataFrame) -> Series:  # type: ignore
     """Returns a series that represents the test time in seconds, starting at
     zero. This is useful when an isolated time interval has a starting time
     other than zero. The test time is returned as a series that can be used
