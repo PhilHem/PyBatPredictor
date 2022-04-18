@@ -178,3 +178,20 @@ def get_SOC_reference(df: DataFrame) -> DataFrame:
     newdf["SOC_Ref"] = np.linspace(100, 0, len(df), endpoint=True).round(3)  # type: ignore -- generate SOC column
     newdf = newdf.set_index("Test_Time(s)")  # type: ignore
     return newdf
+
+
+def soc_from_lut(refdf: DataFrame, voltage: float) -> float:
+    """Calculates the SOC in percent at a given voltage by comparison
+    with a soc lookup table.
+
+    Args:
+        refdf (DataFrame): dataframe containing a SOC lookup 
+            table (use get_SOC_reference())
+        voltage (float): given voltage to be compared
+
+    Returns:
+        float: SOC value derived from comparison with lookup table
+    """
+    return refdf.iloc[np.argmin(abs(refdf[refdf.columns[0]]-voltage))][1]  # type: ignore
+
+
