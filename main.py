@@ -76,7 +76,7 @@ def calculate_testtime(df: DataFrame) -> Series[float]:
     return df["Test_Time(s)"] - df["Test_Time(s)"][0]  # type: ignore
 
 
-def isolate_voltage_columns(df: DataFrame) -> list[str]:
+def get_voltage_column_list(df: DataFrame) -> List[str]:
     """Returns a list of the names of the columns containing cell voltages.
 
     Args:
