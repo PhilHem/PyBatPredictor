@@ -112,13 +112,12 @@ def trim_to_cutoff_voltage(df: DataFrame, cutoff_voltage: float) -> DataFrame:
         df (DataFrame): battery test time series data
         cutoff_voltage (float): voltage past which the data should be
             trimmed
-
     Returns:
         DataFrame: Trimmed DataFrame
     """
     voltage_column_list = get_voltage_column_list(df)
     for col in voltage_column_list:
-        df = df[df[col] >= 1.8]
+        df = df[df[col] >= cutoff_voltage]
     return df
 
 
@@ -135,3 +134,21 @@ def plot_cell_voltages(df: DataFrame) -> None:
     for col in voltage_column_list:
         df.plot(y=col, ax=ax, legend=True, grid=True,  # type:ignore
                 title="Cell Voltages", figsize=(8, 10))  # type:ignore
+
+
+def get_smallest_voltage_cell(df: DataFrame) -> str:
+    """Returns the voltage cell column name with the lowest
+    voltage at the end of the time series data.
+
+    Args:
+        df (DataFrame): DataFrame with battery time series data
+
+    Returns:
+        str: cell column name with lowest voltage
+    """
+    voltage_column_list = get_voltage_column_list(df)
+    smallest_voltage_cell = voltage_column_list[0]
+    for cell in voltage_column_list:
+        if df[cell][-1] < df[smallest_voltage_cell][-1]:
+            smallest_voltage_cell = cell
+    return smallest_voltage_cell
