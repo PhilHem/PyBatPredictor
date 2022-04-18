@@ -1,4 +1,5 @@
 from pandas import DataFrame, Series
+from typing import List
 
 
 def isolate_timeinterval(
@@ -133,4 +134,4 @@ def plot_cell_voltages(df: DataFrame) -> None:
     voltage_column_list = voltage_column_list[1::]
     for col in voltage_column_list:
         df.plot(y=col, ax=ax, legend=True, grid=True,  # type:ignore
-                title="Cell Voltages", figsize=(10, 10))  # type:ignore
+                title="Cell Voltages", figsize=(8, 10))  # type:ignore
