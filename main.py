@@ -102,6 +102,25 @@ def get_number_voltage_columns(df: DataFrame) -> int:
     voltage_col_name_len = len(isolate_voltage_columns(df))
     return voltage_col_name_len
 
+
+def trim_to_cutoff_voltage(df: DataFrame, cutoff_voltage: float) -> DataFrame:
+    """Trims a DataFrame up to a specific "Aux_Voltage". Useful for
+    isolating a specific voltage range in a battey capacity test
+
+    Args:
+        df (DataFrame): battery test time series data
+        cutoff_voltage (float): voltage past which the data should be
+            trimmed
+
+    Returns:
+        DataFrame: Trimmed DataFrame
+    """
+    voltage_column_list = get_voltage_column_list(df)
+    for col in voltage_column_list:
+        df = df[df[col] >= 1.8]
+    return df
+
+
 def plot_cell_voltages(df: DataFrame) -> None:
     """Plots all the cell voltages from a given DataFrame
     containing battery time series data.
