@@ -216,5 +216,5 @@ def get_final_SOC(df: DataFrame) -> DataFrame:
     for idx, cell in enumerate(voltage_cols):
         voltage_cols[idx] = cell.replace("Aux_Voltage_", "Cell ").replace("(V)", "")
     soc_df["Cell ID"] = voltage_cols
-    soc_df = soc_df.set_index("Cell ID")
+    soc_df = soc_df.set_index("Cell ID")  # type: ignore
     return soc_df
