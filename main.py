@@ -158,16 +158,16 @@ def get_smallest_voltage_cell(df: DataFrame) -> str:
 def get_SOC_reference(df: DataFrame) -> DataFrame:
     """Returns a dataframe that isolates the voltage of the first cell
     that reaches the cutoff voltage within a capacity test and maps a
-    corresponding SOC-Value to each voltage measurement. 
-    This can later be used a lookup table other cells to determine the 
+    corresponding SOC-Value to each voltage measurement.
+    This can later be used a lookup table other cells to determine the
     last SOC value before ending the test.
 
     Args:
-        df (DataFrame): Dataframe that represents a capacity 
+        df (DataFrame): Dataframe that represents a capacity
         test with multiple cells.
 
     Returns:
-        DataFrame: Dataframe that shows the SOC of each cell in 
+        DataFrame: Dataframe that shows the SOC of each cell in
         the stack at the end of the capacity test.
     """
 
@@ -185,7 +185,7 @@ def soc_from_lut(refdf: DataFrame, voltage: float) -> float:
     with a soc lookup table.
 
     Args:
-        refdf (DataFrame): dataframe containing a SOC lookup 
+        refdf (DataFrame): dataframe containing a SOC lookup
             table (use get_SOC_reference())
         voltage (float): given voltage to be compared
 
