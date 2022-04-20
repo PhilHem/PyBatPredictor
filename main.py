@@ -240,3 +240,17 @@ def get_smallest_cap_cell(df: DataFrame) -> float:
     """
     cap: float = -np.trapz(df["Current(A)"], df["Test_Time(s)"])/3600  # type:ignore
     return cap
+
+
+def get_capacity_list(df_list: List[DataFrame]) -> DataFrame:
+    return_df = DataFrame()
+    for idx, df in enumerate(df_list):
+        soc_df = get_final_SOC(df)
+        #return_df[f"SOC_{idx+1} (%)"] = soc_df["SOC (%)"]
+        return_df[f"Capacity_{idx+1} (Ah)"] = soc_df["Capacity (Ah)"]
+
+    return return_df
+
+
+def get_soh_list(df_list: List[DataFrame]) -> DataFrame:
+    capacity_df = get_capacity_list(df_list)
