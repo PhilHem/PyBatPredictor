@@ -207,12 +207,17 @@ def get_final_SOC(df: DataFrame) -> DataFrame:
     """
     refdf = get_SOC_reference(df)
     soc_df = DataFrame()
+    smallest_cap = get_smallest_cap_cell(df)
     soc_list = []
+    capacity_list = []
     voltage_cols = get_voltage_column_list(df)
     for col in voltage_cols:
         soc = soc_from_lut(refdf, df[col][-1])  # type: ignore
+        cap = smallest_cap + smallest_cap*soc/100
         soc_list.append(soc)  # type: ignore
-    soc_df["SOC"] = soc_list
+        capacity_list.append(cap)  # type:ignore
+    soc_df["SOC (%)"] = soc_list
+    soc_df["Capacity (Ah)"] = capacity_list
     for idx, cell in enumerate(voltage_cols):
         voltage_cols[idx] = cell.replace("Aux_Voltage_", "Cell ").replace("(V)", "")
     soc_df["Cell ID"] = voltage_cols
