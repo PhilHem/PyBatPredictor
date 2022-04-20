@@ -223,3 +223,20 @@ def get_final_SOC(df: DataFrame) -> DataFrame:
     soc_df["Cell ID"] = voltage_cols
     soc_df = soc_df.set_index("Cell ID")  # type: ignore
     return soc_df
+
+
+def get_smallest_cap_cell(df: DataFrame) -> float:
+    """Calculates the capacity of the cell that reaches the cutoff voltage first
+    by trapezoidal integration of the current.
+
+    The other cells in the test deliver at least that amount of current, but their
+    capacity has to be derived from the SOC at the end of the test.
+
+    Args:
+        df (DataFrame): Dataframe containing a capacity test of at least one cell.
+
+    Returns:
+        float: Capacity value in Ah of that cell. 
+    """
+    cap: float = -np.trapz(df["Current(A)"], df["Test_Time(s)"])/3600  # type:ignore
+    return cap
