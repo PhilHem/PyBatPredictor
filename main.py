@@ -25,7 +25,8 @@ def isolate_timeinterval(
 def isolate_step_index(
         df: DataFrame,
         step_index: int,
-        col_name: str = "Step_Index") -> DataFrame:
+    step index as a column. This only works if there is a column that 
+    represents the Step Index within the dataframe.
     """Isolates a time series within a dataframe that has a certain
     step index as a column.
 
