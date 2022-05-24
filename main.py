@@ -7,8 +7,10 @@ def isolate_timeinterval(
         df: DataFrame,
         start_date: str,
         stop_date: str) -> DataFrame:
-    """Isolates a time interval within a time series
+    """Isolates a time interval within a time series and returns a 
+    new pandas DataFrame that represents the time interval.
 
+    For this to work, the DataFrame must have an index column in with the DateTime type.
     Args:
         df (DataFrame): time series that contains the interval
         start_date (str): start date for interval
@@ -134,7 +136,7 @@ def plot_cell_voltages(df: DataFrame) -> None:
     voltage_column_list = voltage_column_list[1::]
     for col in voltage_column_list:
         df.plot(y=col, ax=ax, legend=True, grid=True,  # type:ignore
-                title="Cell Voltages", figsize=(8, 10))  # type:ignore
+                title="Cell Voltages", figsize=(10, 9), ylim=(1.8, 2.1))  # type:ignore
 
 
 def get_smallest_voltage_cell(df: DataFrame) -> str:
