@@ -25,10 +25,10 @@ def isolate_timeinterval(
 def isolate_step_index(
         df: DataFrame,
         step_index: int,
+        col_name: str = "Step_Index") -> DataFrame:
+    """Isolates a time series within a dataframe that has a certain
     step index as a column. This only works if there is a column that 
     represents the Step Index within the dataframe.
-    """Isolates a time series within a dataframe that has a certain
-    step index as a column.
 
 
     Args:
@@ -43,13 +43,13 @@ def isolate_step_index(
 
 
 def isolate_step_index_in_timeinterval(
+        df: DataFrame,
+        start_date: str,
+        stop_date: str,
         step_index: int,
         step_col_name: str = "Step_Index") -> DataFrame:
-        start_date: str,
-    as well as a specific step index. For this to work, the DataFrame needs an index column that has the DateTime type, as well as a column that represents the step index
-        step_index: int) -> DataFrame:
     """Isolates a time interval within time series data,
-    as well as a specific step index
+    as well as a specific step index. For this to work, the DataFrame needs an index column that has the DateTime type, as well as a column that represents the step index
 
     Args:
         df (DataFrame): DataFrame to be trimmed
