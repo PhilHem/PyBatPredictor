@@ -201,7 +201,7 @@ def soc_from_lut(refdf: DataFrame, voltage: float) -> float:
 
 def get_final_SOC(df: DataFrame) -> DataFrame:
     """Returns a DataFrame that represents the SOC of each cell of a cell stack
-    at the end of a capacity test.
+    at the end of a capacity test. This requires a capacity test dataframe with 
 
     Args:
         df (DataFrame): dataframe containing a capacity test.
@@ -209,24 +209,34 @@ def get_final_SOC(df: DataFrame) -> DataFrame:
     Returns:
         DataFrame: dataframe representing the SOC at the end of capacity test.
     """
-    refdf = get_SOC_reference(df)
-    soc_df = DataFrame()
-    smallest_cap = get_smallest_cap_cell(df)
-    soc_list = []
-    capacity_list = []
-    voltage_cols = get_voltage_column_list(df)
-    for col in voltage_cols:
-        soc = soc_from_lut(refdf, df[col][-1])  # type: ignore
-        cap = smallest_cap + smallest_cap*soc/100
-        soc_list.append(soc)  # type: ignore
-        capacity_list.append(cap)  # type:ignore
-    soc_df["SOC (%)"] = soc_list
-    soc_df["Capacity (Ah)"] = capacity_list
+
+    refdf = get_SOC_reference(df)                               # * generate lookup table for SOC
+
+    smallest_cap = get_smallest_cap_cell(df)                    # * isolate the cell that first reaches cutoff voltage
+
+    output_df = DataFrame()                                     # * generate new dataframe for final output dataframe
+
+    soc_list = []                                               # * generate list for SOC values in percent
+    capacity_list = []                                          # * generate list for capacity values in mAh
+    voltage_cols = get_voltage_column_list(df)                  # * generate list of cell voltage columns
+
+    for col in voltage_cols:                                    # * iterate over cell voltage columns
+        soc = soc_from_lut(refdf, df[col][-1])  # type: ignore  # * calculate SOC value for each cell voltage column
+        cap = smallest_cap + smallest_cap*soc/100               # * calculate capacity value for each cell voltage column
+        soc_list.append(soc)  # type: ignore                    # * append SOC value to SOC value list
+        capacity_list.append(cap)  # type:ignore                # * append capacity value to capacity value list
+
+    output_df["SOC (%)"] = soc_list                             # * generate SOC column in output dataframe
+    output_df["Capacity (Ah)"] = capacity_list                  # * generate capacity column in output dataframe
+
+    # * change the name of the voltage columns to the respective cell names
     for idx, cell in enumerate(voltage_cols):
-        voltage_cols[idx] = cell.replace("Aux_Voltage_", "Cell ").replace("(V)", "")
-    soc_df["Cell ID"] = voltage_cols
-    soc_df = soc_df.set_index("Cell ID")  # type: ignore
-    return soc_df
+        voltage_cols[idx] = cell.replace("Aux_Voltage_", "Cell ")
+        voltage_cols[idx] = voltage_cols[idx].replace("(V)", "")
+
+    output_df["Cell ID"] = voltage_cols                         # * generate cell ID column in output dataframe
+    output_df = output_df.set_index("Cell ID")  # type: ignore  # * set index to cell ID column
+    return output_df
 
 
 def get_smallest_cap_cell(df: DataFrame) -> float:
