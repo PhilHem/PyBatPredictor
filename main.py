@@ -43,9 +43,10 @@ def isolate_step_index(
 
 
 def isolate_step_index_in_timeinterval(
-        df: DataFrame,
+        step_index: int,
+        step_col_name: str = "Step_Index") -> DataFrame:
         start_date: str,
-        stop_date: str,
+    as well as a specific step index. For this to work, the DataFrame needs an index column that has the DateTime type, as well as a column that represents the step index
         step_index: int) -> DataFrame:
     """Isolates a time interval within time series data,
     as well as a specific step index
